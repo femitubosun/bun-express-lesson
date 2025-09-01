@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Player" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "jerseyNumber" INTEGER NOT NULL DEFAULT 10,
+    "postition" TEXT NOT NULL,
+    "value" DECIMAL NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);

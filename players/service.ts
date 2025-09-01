@@ -1,47 +1,62 @@
-import type {
-  CreatePlayerSchema,
-  PlayerSchema,
-  UpdatePlayerSchema,
-} from "./__defs__";
-
-const players: Map<number, PlayerSchema> = new Map();
+import { db } from "../db";
+import type { CreatePlayerSchema, UpdatePlayerSchema } from "./__defs__";
 
 export async function createPlayerService(input: CreatePlayerSchema) {
-  const newPlayer = {
-    id: players.size + 1,
-    ...input,
-  };
+  /**
+   *
+   * input = {
+   * name: "Neymar"
+   * jerseyNumber: 10,
+   * position: Forward
+   * value: 2000000
+   * }
+   *
+   *
+   */
 
-  players.set(newPlayer.id, newPlayer);
+  const newPlayer = await db.player.create({
+    data: {
+      name: input.name,
+      jerseyNumber: input.jerseyNumber,
+      postition: input.position,
+      value: input.value,
+    },
+  });
 
   return newPlayer;
 }
 
 export async function getAllPlayersService() {
-  const result = Array.from(players.values());
+  const result = await db.player.findMany();
 
   return result;
 }
 
 export async function getPlayerByIdService(id: number) {
-  const player = players.get(id);
+  const player = await db.player.findUnique({
+    where: {
+      id: id,
+    },
+  });
 
   return player;
 }
 
 export async function deletePlayerById(id: number) {
-  players.delete(id);
+  await db.player.delete({
+    where: {
+      id: id,
+    },
+  });
 }
 
 export async function updatePlayerById(id: number, input: UpdatePlayerSchema) {
-  const player = players.get(id);
+  const player = await db.player.update({
+    where: {
+      id: id,
+    },
+    data: input,
+  });
 
-  const newPlayer = {
-    ...player!,
-    ...input,
-  };
-
-  players.set(player!.id, newPlayer);
-
-  return newPlayer;
+  return player;
 }
